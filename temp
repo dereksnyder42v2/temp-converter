@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+UNITS = ('F', 'C', 'R', 'K')
+
+#def convert(val, unit_in='F', unit_out='C'): 
+def temp_convert(val, unit_in='F', unit_out='C'):
+    if unit_in not in UNITS:
+        raise Exception("Invalid input unit specified: %s" % (unit_in))
+    if unit_out not in UNITS:
+        raise Exception("Invalid output unit specified: %s" % (unit_out))
+    # Convert to deg C
+    if unit_in == 'F':
+        val = (val - 32)/1.8
+    elif unit_in == 'C':
+        pass
+    elif unit_in == 'K':
+        val = val - 273.15
+    elif unit_in == 'R':
+        val = (val - 491.67)/1.8
+    # Convert from C --> output unit
+    if unit_out == 'F':
+        val = (val *1.8) + 32 
+    elif unit_out == 'C':
+        pass
+    elif unit_out == 'K':
+        val = val + 273.15
+    elif unit_out == 'R':
+        val = (val *1.8) + 491.67
+
+    return val
+
+if __name__ == "__main__":
+    import sys
+    """
+    command format: temp $T $INPUT_UNIT $OUTPUT_UNIT
+    eg: 
+    $ temp 100 C F 
+    212
+    """
+    if len(sys.argv)-1 != 3:
+        sys.stderr.write("Incorrect number of arguments: %d (should be 3)\n" % ( len(sys.argv)-1 ))
+        sys.stderr.write("Usage: temp <t> <input unit> <output unit>\n")
+        sys.stderr.write("Supported units: F, C, K, R\n")
+        quit(1)
+    print("%.2f" % (
+        temp_convert(
+            float(sys.argv[1]), 
+            unit_in=sys.argv[2].upper(), 
+            unit_out=sys.argv[3].upper()
+        )
+    ))
+
